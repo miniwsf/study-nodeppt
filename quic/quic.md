@@ -9,26 +9,25 @@ QUIC {.text-intro.animated.fadeInDown.delay-800}
 - 为什么？
 - 怎么做？
 
-<slide image="./image/WechatIMG1.png .right-bottom">
+<slide>
 
-:::{.content-left}
+:::column {.vertical-align}
 ### QUIC是什么？
 
-:::flexblock {.specs}
+* 快速UDP网络连接（英语：Quick UDP Internet Connections），是一种实验性的网络传输协议。
 
-快速UDP网络连接（英语：Quick UDP Internet Connections），是一种实验性的网络传输协议。
+* QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减少数据传输及创建连线时的延迟时间，双向控制带宽，以避免网络拥塞。
 
----
-
-QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减少数据传输及创建连线时的延迟时间，双向控制带宽，以避免网络拥塞。
+* Google希望使用这个协议来取代HTTPS/HTTP协议，使网页传输速度加快。{.description}
 
 ---
-Google希望使用这个协议来取代HTTPS/HTTP协议，使网页传输速度加快。
 
+!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg)
 :::
 
 <slide>
-!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg .size-40.alignleft)
+!![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
+
 :::{.content-right}
 ### 为什么出现QUIC？
 
@@ -38,7 +37,7 @@ Google希望使用这个协议来取代HTTPS/HTTP协议，使网页传输速度�
 
 `在建立连接期间，TCP和TLS/SSL通常需要一个或多个往返时间（RTT）`
 
-RTT：从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认），总共经历的时延。{.animated.fadeInUp.delay-800}
+RTT：从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认），总共经历的时延。{.description.animated.fadeInUp.delay-800}
 
 <slide>
 ### 实现0-RTT
@@ -50,12 +49,22 @@ QUIC的设计宗旨,如果客户端以前已经与给定服务器进行了对话
 
 <slide>
 
-!![](https://www.yinchengli.com/wp-content/uploads/2018/06/8.png .size-50.aligncleft)
+:::column {.vertical-align}
 
-!![](https://www.yinchengli.com/wp-content/uploads/2018/06/9.png .size-50.aligncright)
+TCP+TLS\:
+
+!![](https://www.yinchengli.com/wp-content/uploads/2018/06/8.png)
+
+---
+QUIC\:
+
+!![](https://www.yinchengli.com/wp-content/uploads/2018/06/9.png)
+:::
+
+（chrome数据：QUIC在糟糕的网络条件下胜过TCP，将Google搜索页面的加载时间缩短了整整一秒钟，这是最慢的1％的连接。对于YouTube等视频服务而言，这些优势更加明显。通过QUIC观看视频时，用户报告的重新缓冲减少了30％）
 
 <slide>
-!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg .size-40.alignleft)
+!![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 :::{.content-right}
 ### 为什么出现QUIC？
 
@@ -79,7 +88,7 @@ QUIC的设计宗旨,如果客户端以前已经与给定服务器进行了对话
 QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC流是单独控制的，并且在QUIC级别而不是UDP级别重传丢失的数据。这意味着如果在一个流中发生错误，协议栈仍然可以独立地继续为其他流提供服务
 
 <slide>
-!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg .size-40.alignleft)
+!![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 :::{.content-right}
 ### 为什么出现QUIC？
 
