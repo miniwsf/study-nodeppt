@@ -32,24 +32,13 @@ Google希望使用这个协议来取代HTTPS/HTTP协议，使网页传输速度�
 :::{.content-right}
 ### 为什么出现QUIC？
 
-:::flexblock {.specs}
+:::flexblock {.specs.bg-trans-dark}
 
 ### 连接延迟
 
-RTT：从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认），总共经历的时延。
+`在建立连接期间，TCP和TLS/SSL通常需要一个或多个往返时间（RTT）`
 
----
-
-### 队头阻塞
-
-一个TCP分节丢失，导致其后续分节不按序到达接收端的时候。
-
-HTTP/2 多路复用{.text-intro}
-
----
-### 网络切换
-当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建
-:::
+RTT：从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认），总共经历的时延。{.animated.fadeInUp.delay-800}
 
 <slide>
 ### 实现0-RTT
@@ -66,15 +55,50 @@ QUIC的设计宗旨,如果客户端以前已经与给定服务器进行了对话
 !![](https://www.yinchengli.com/wp-content/uploads/2018/06/9.png .size-50.aligncright)
 
 <slide>
+!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg .size-40.alignleft)
+:::{.content-right}
+### 为什么出现QUIC？
 
+:::flexblock {.specs}
+
+### 连接延迟
+
+---
+
+{.bg-trans-dark}
+### 队头阻塞
+
+队头阻塞——一个TCP分节丢失，导致其后续分节不按序到达接收端的时候。
+
+`HTTP/2实现多路复用：多个HTTP请求共用一个TCP连接，以减少TCP连接数，达到复用高速信道的作用。但是TCP连接中的单个丢失数据包使该连接上的所有多路复用停顿下来`{.animated.fadeInUp.delay-800}
+
+<slide>
+:::{.content-center}
 ## 多路复用解决队头阻塞
-
-HTTP/2 多个HTTP请求共用一个TCP连接，以减少TCP连接数，达到复用高速信道的作用  
 
 QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC流是单独控制的，并且在QUIC级别而不是UDP级别重传丢失的数据。这意味着如果在一个流中发生错误，协议栈仍然可以独立地继续为其他流提供服务
 
 <slide>
+!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg .size-40.alignleft)
+:::{.content-right}
+### 为什么出现QUIC？
 
+:::flexblock {.specs}
+
+### 连接延迟
+
+---
+
+### 队头阻塞
+
+---
+
+网络切换 {.text-subtitle.animated.fadeInUp.delay-800}
+
+当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建 {.animated.fadeInUp.delay-800}
+
+<slide>
+:::{.content-center}
 ## 网络切换
 QUIC包含一个连接标识符，该标识符唯一地标识客户端与服务器之间的连接，而无论源IP地址是什么。这样只需发送一个包含此ID的数据包即可重新创建连接，因为即使用户的IP地址发生变化，原始连接ID仍然有效
 
