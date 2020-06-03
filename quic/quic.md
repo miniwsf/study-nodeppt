@@ -4,48 +4,101 @@ url:
 
 <slide class="bg-black-blue aligncenter" image="https://source.unsplash.com/C1HhAQrbykQ/ .dark">
 
-QUIC {.text-intro.animated.fadeInDown.delay-800}
-- 是什么？
-- 为什么？
-- 怎么做？
+## QUIC 
+(Quick UDP Internet Connections) {.animated.fadeInDown.delay-800}
 
-<slide>
 
-:::column {.vertical-align}
+<slide class="aligncenter">
 ### QUIC是什么？
 
-* 快速UDP网络连接（英语：Quick UDP Internet Connections），是一种实验性的网络传输协议。
+:::column {.vertical-align}
 
-* QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减少数据传输及创建连线时的延迟时间，双向控制带宽，以避免网络拥塞。
-
-* Google希望使用这个协议来取代HTTPS/HTTP协议，使网页传输速度加快。{.description}
-
+快速UDP网络连接（英语：Quick UDP Internet Connections），是一种实验性的网络传输协议。Google希望使用这个协议来取代HTTPS/HTTP协议，使网页传输速度加快。{.text-description}
+ 
 ---
 
-!![](https://miniwsf.github.io/img/20180917/1522739493016.jpg)
+QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减少数据传输及创建连线时的延迟时间，双向控制带宽，以避免网络拥塞。  
+
 :::
 
 <slide>
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 
 :::{.content-right}
-### 为什么出现QUIC？
+### Why QUIC？
 
 :::flexblock {.specs.bg-trans-dark}
 
-### 连接延迟
+### 网络延迟
+`RTT（往返时间）：是网络请求从起点到目的地并再次回到起点所花费的持续时间（以毫秒为单位）——衡量网络延迟的重要指标`
 
-`在建立连接期间，TCP和TLS/SSL通常需要一个或多个往返时间（RTT）`
-
-RTT：从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认），总共经历的时延。{.description.animated.fadeInUp.delay-800}
+网络延迟包含：处理延迟，排队延迟，传输延迟，传播延迟 {.text-label.size-20}
 
 <slide>
-### 实现0-RTT
 
-!![](https://lh3.googleusercontent.com/o62Ohn1Ppxna6zz0NtavqRyetjryOj-81Sz4bRt3U8lURVblk5RKOaCcf57i6BkmprremePJpq_sQcxfJiuA4wJBmRp3pR4BS1P-yiT6UNUPvnBeP_rLz9bvHxFE15kuNBM2hpE .size-40.aligncenter)
+:::column {.vertical-align}
 
-:::{.content-center}
-QUIC的设计宗旨,如果客户端以前已经与给定服务器进行了对话，则它可以开始发送数据而无需进行任何往返操作，从而可以更快地加载网页
+!![](https://miniwsf.github.io/study-nodeppt/quic/image/chrome_waterfall.png .alignleft)
+
+--- 
+
+| 延迟时间（单位ms） | 用户反应 |
+| :----------- | :------------: |
+| 0 - 16  |   用户可以感知每秒渲染 60 帧的平滑动画转场。也就是每帧 16 毫秒，留给应用大约 10 毫秒的时间来生成一帧。   |
+| 0 - 100 |    在此时间窗口内响应用户操作，他们会觉得可以立即获得结果。时间再长，操作与反应之间的连接就会中断。    | 
+| 100 - 300  |   用户会遇到轻微可觉察的延迟。   |
+| 300 - 1000  |   在此窗口内，延迟感觉像是任务自然和持续发展的一部分。对于网络上的大多数用户，加载页面或更改视图代表着一个任务。   |
+| 1000+  |   超过 1 秒，用户的注意力将离开他们正在执行的任务。   |
+| 10,000+  |   用户感到失望，可能会放弃任务；之后他们或许不会再回来。   |
+
+:::
+
+<slide>
+
+:::flexblock {.clients}
+
+### TCP
+TCP快启动。
+
+允许在SYN和SYN-ACK中携带数据，数据包和接收端在初始阶段消耗的数据包。连接握手，最多可节省一个完整的往返时间（RTT）
+
+缺点：
+1. 兼容差（TCP是操作系统内核实现）
+2. 隐私问题（和TCP快启动的实现有关了）
+
+如上原因，导致这个很少使用
+
+---
+
+### TSL
+TSL/1.3 
+
+将2RTT减少至1RTT
+
+---
+
+### HTTP
+http/1.1 connetion:keep-alive 
+
+http/2 多路复用
+
+缺点：
+1. 队头阻塞问题
+
+:::
+
+<slide>
+### QUIC实现0-RTT
+
+:::column {.vertical-align}
+- 基于UDP（面向无连接的），没有三次握手过程
+- 首次进入：将TCP(1RTT)+TSL(2RTT)减少为1RTT（后续进入实现0-RTT）
+
+--- 
+
+!![](https://lh3.googleusercontent.com/o62Ohn1Ppxna6zz0NtavqRyetjryOj-81Sz4bRt3U8lURVblk5RKOaCcf57i6BkmprremePJpq_sQcxfJiuA4wJBmRp3pR4BS1P-yiT6UNUPvnBeP_rLz9bvHxFE15kuNBM2hpE)
+
+:::
 
 <slide>
 
@@ -66,11 +119,12 @@ QUIC\:
 <slide>
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 :::{.content-right}
-### 为什么出现QUIC？
+
+### Why QUIC？
 
 :::flexblock {.specs}
 
-### 连接延迟
+### 网络延迟
 
 ---
 
@@ -90,11 +144,11 @@ QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC
 <slide>
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 :::{.content-right}
-### 为什么出现QUIC？
+### Why QUIC？
 
 :::flexblock {.specs}
 
-### 连接延迟
+### 网络延迟
 
 ---
 
@@ -102,14 +156,9 @@ QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC
 
 ---
 
-网络切换 {.text-subtitle.animated.fadeInUp.delay-800}
+其他 {.text-subtitle.animated.fadeInUp.delay-800}
 
-当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建 {.animated.fadeInUp.delay-800}
-
-<slide>
-:::{.content-center}
-## 网络切换
-QUIC包含一个连接标识符，该标识符唯一地标识客户端与服务器之间的连接，而无论源IP地址是什么。这样只需发送一个包含此ID的数据包即可重新创建连接，因为即使用户的IP地址发生变化，原始连接ID仍然有效
+- 网络切换：当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建 {.animated.fadeInUp.delay-800}
 
 <slide class="aligncenter">
 :::div {.text-cols}
