@@ -39,7 +39,7 @@ QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减�
 
 <slide>
 
-:::column {.sm}
+:::column {.sm.vertical-align}
 
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/chrome_waterfall.png .alignleft)
 
