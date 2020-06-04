@@ -27,16 +27,19 @@ QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减�
 :::{.content-right}
 ### Why QUIC？
 
-:::flexblock {.specs.bg-trans-dark}
+:::flexblock
 
 ### 网络延迟
+
+网络延迟包含：处理延迟，排队延迟，传输延迟，传播延迟
+
 `RTT（往返时间）：是网络请求从起点到目的地并再次回到起点所花费的持续时间（以毫秒为单位）——衡量网络延迟的重要指标`
 
-网络延迟包含：处理延迟，排队延迟，传输延迟，传播延迟 {.text-label.size-20}
+:::
 
 <slide>
 
-:::column {.vertical-align}
+:::column {.sm}
 
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/chrome_waterfall.png .alignleft)
 
@@ -55,35 +58,39 @@ QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减�
 
 <slide>
 
-:::flexblock {.clients}
+:::flexblock {.clients.border}
 
+ {.blacklogo}
 ### TCP
-TCP快启动。
+TCP快启动  
+`允许在SYN和SYN-ACK中携带数据，数据包和接收端在初始阶段消耗的数据包。连接握手，最多可节省一个完整的往返时间（RTT）`
 
-允许在SYN和SYN-ACK中携带数据，数据包和接收端在初始阶段消耗的数据包。连接握手，最多可节省一个完整的往返时间（RTT）
-
-缺点：
-1. 兼容差（TCP是操作系统内核实现）
-2. 隐私问题（和TCP快启动的实现有关了）
-
-如上原因，导致这个很少使用
+**缺点**  
+`兼容差（TCP是操作系统内核实现）`  
+`隐私问题`
 
 ---
 
+ {.blacklogo}
 ### TSL
 TSL/1.3 
 
-将2RTT减少至1RTT
+首次：2RTT减少至1RTT  
+0-RTT：如果客户端和服务器之前已在彼此之间建立TLS连接，则它们可以使用从该会话中缓存的信息来建立新的TLS，而不必从头开始协商连接的参数。
 
 ---
 
+ {.blacklogo}
 ### HTTP
-http/1.1 connetion:keep-alive 
+HTTP/1.1   
+`持久连接（Connetion: keep-alive）——减少tcp连接数`
 
-http/2 多路复用
+HTTP/2  
+`多路复用 ——减少tcp连接数`
 
-缺点：
-1. 队头阻塞问题
+**缺点**  
+`队头阻塞问题`  
+`没有根本解决TCP连接延迟问题`
 
 :::
 
@@ -92,7 +99,8 @@ http/2 多路复用
 
 :::column {.vertical-align}
 - 基于UDP（面向无连接的），没有三次握手过程
-- 首次进入：将TCP(1RTT)+TSL(2RTT)减少为1RTT（后续进入实现0-RTT）
+- 首次进入：合并原有的TCP连接和TLS认证过程，将TCP(1RTT)+TSL(2RTT)减少为1RTT，后续进入实现0-RTT（0-RTT存在一定
+安全风险，可以默认不开启）
 
 --- 
 
@@ -130,10 +138,48 @@ QUIC\:
 
 {.bg-trans-dark}
 ### 队头阻塞
+`（Head-of-line blocking）`   
+当顺序发送的请求序列中的一个请求因为某种原因被阻塞时，在后面排队的所有请求也一并被阻塞
 
-队头阻塞——一个TCP分节丢失，导致其后续分节不按序到达接收端的时候。
+<slide :class="size-80">
 
-`HTTP/2实现多路复用：多个HTTP请求共用一个TCP连接，以减少TCP连接数，达到复用高速信道的作用。但是TCP连接中的单个丢失数据包使该连接上的所有多路复用停顿下来`{.animated.fadeInUp.delay-800}
+## HTTP历程  
+`仅针对连接逻辑`
+
+---
+:::steps
+
+## HTTP/1.0
+
+一次只能发起一个请求，下一个请求需要等上一个请求收到响应之后才能继续。
+
+---
+
+## HTTP/1.1
+
+流水线（pipelining）：多个请求整批提交（一般浏览器允许的最大连接为6个）
+
+---
+
+## HTTP/2
+
+多路复用（Multiplexing）：在一个信道上传输多路信号或数据流的过程和技术
+
+:::
+
+<slide>
+:::column {.vertical-align}
+
+HTTP/1.1\:
+
+!![](https://freecontent.manning.com/wp-content/uploads/HTTP-vs-with-Push-HTTP1.gif)
+
+---
+HTTP/2\:
+
+!![](https://freecontent.manning.com/wp-content/uploads/HTTP-vs-with-Push-HTTP2.gif)
+:::
+
 
 <slide>
 :::{.content-center}
@@ -156,7 +202,7 @@ QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC
 
 ---
 
-其他 {.text-subtitle.animated.fadeInUp.delay-800}
+### 其他 {.text-subtitle.animated.fadeInUp.delay-800}
 
 - 网络切换：当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建 {.animated.fadeInUp.delay-800}
 
@@ -169,10 +215,9 @@ QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC
 `腾讯` 
 `快手`
 
-感兴趣的话，可以细看下面的资料  
-[快速UDP网络连接](https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9FUDP%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5)  
-[Draft-ietf-quic-transport-20](https://tools.ietf.org/html/draft-ietf-quic-transport-20)  
-[关于Google实验性运输的QUIC更新](https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html)  
+---
+
+HTTP/3：使用QUIC协议实现
 
 <slide class="aligncenter">
 
