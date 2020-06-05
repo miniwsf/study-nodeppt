@@ -17,19 +17,56 @@ url:
  
 ---
 
-QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减少数据传输及创建连线时的延迟时间，双向控制带宽，以避免网络拥塞。  
+QUIC是由Google开发，  
+旨在提供基于TLS/DTLS的网络安全保护，  
+减少数据传输及创建连线时的延迟时间，  
+双向控制带宽，以避免网络拥塞。
 
 :::
+
 <note>
 1. 读音是quick
 2. quic是一个传输层协议
 </note>
+<slide class="aligncenter"> 
+
+:::{.content-center}
+### QUIC优点
+
+- 减少了 TCP 三次握手及 TLS 握手时间 
+- 多路复用，避免队头阻塞  
+- 快速迭代，广泛支持  
+- 连接迁移：当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建
+:::
 
 <slide>
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 
 :::{.content-right}
 ### Why QUIC？
+
+:::flexblock {.specs}
+
+### 协议历史悠久导致中间设备僵化
+
+---
+
+### 依赖于操作系统的实现导致协议本身僵化
+
+---
+
+### 建立连接的握手延迟大
+
+---
+
+### 队头阻塞
+
+:::
+
+<slide>
+
+:::{.content-center}
+### Why QUIC——建立连接的握手延迟
 
 :::flexblock
 
@@ -51,11 +88,12 @@ QUIC是由Google开发，旨在提供基于TLS/DTLS的网络安全保护，减�
 - 传播延迟  –信号到达目的地的时间（传播延迟是指信号头从发送器传播到接收器所花费的时间）传播时延 = 信道长度(m) / 电磁波在信道上的传播速率(m/s)。例如，cdn主要就是为了减少传播的距离从而减少传播延迟
 
 距离说明：
-1. 高速公路服务站就是路由器，车就是数据包，路就是我们的物理介质（铜线，光缆这些），人就是分组
+接收快递：
+1. 快递中间点就是路由器，快递就是数据包，交通方式就是我们的物理介质（铜线，光缆这些），就是分组
 2. 处理延迟：就是每个服务站需要检查驾照啊或者看车内有没有什么违禁品啊是否酒驾等等这期间的时间
 3. 排队延迟：处理其他人的时候，需要排队等待的时间
-4. 传输延迟：人上车的时间
-5. 传播延迟：假如高速公路速度是60km/h，泥土路：10km/h
+4. 传输延迟：xxx
+5. 传播延迟：假如高速公路速度是60km/h，泥土路：10km/h，飞机xxx
 </note>
 <slide>
 
@@ -154,13 +192,9 @@ QUIC\:
 !![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
 :::{.content-right}
 
-### Why QUIC？
+### Why QUIC——队头阻塞
 
 :::flexblock {.specs}
-
-### 网络延迟
-
----
 
 {.bg-trans-dark}
 ### 队头阻塞
@@ -211,26 +245,8 @@ HTTP/2\:
 :::{.content-center}
 ## 多路复用解决队头阻塞
 
-QUIC使用UDP协议作为其基础，不包括丢失恢复。相反，每个QUIC流是单独控制的，并且在QUIC级别而不是UDP级别重传丢失的数据。这意味着如果在一个流中发生错误，协议栈仍然可以独立地继续为其他流提供服务
-
-<slide>
-!![](https://miniwsf.github.io/study-nodeppt/quic/image/WechatIMG1.png .size-40.alignleft)
-:::{.content-right}
-### Why QUIC？
-
-:::flexblock {.specs}
-
-### 网络延迟
-
----
-
-### 队头阻塞
-
----
-
-### 其他 {.text-subtitle.animated.fadeInUp.delay-800}
-
-- 网络切换：当移动设备的用户从WiFi热点切换到移动网络时发生的情况。 当这发生在TCP上时，一个冗长的过程开始了：每个现有连接一个接一个地超时，然后根据需要重新创建 {.animated.fadeInUp.delay-800}
+- QUIC使用UDP协议作为其基础，不包括丢失恢复
+- 每个QUIC流是单独控制的，并且在QUIC级别而不是UDP级别重传丢失的数据。这意味着如果在一个流中发生错误，协议栈仍然可以独立地继续为其他流提供服务
 
 <slide class="aligncenter">
 :::div {.text-cols}
